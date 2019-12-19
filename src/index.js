@@ -3,44 +3,76 @@ import ReactDOM from 'react-dom'
 import './index.css'
 
 
-class Square extends React.Component {
-    constructor(props){
-        super(props);
-            this.state={
-                value:null,
-            };
-    }
-    
-    render() {
-        return (
-            <button className="square"
-                onClick={() => this.setState({ value: 'X' })}>
-                {this.state.value}
-            </button>
-        );
-    }
-}
+// class Square extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             value: null,
+//         };
+//     }
+
+//     render() {
+//         return (
+//             <button className="square"
+//                 onClick={() => this.setState({ value: 'X' })}>
+//                 {this.state.value}
+//             </button>
+//         );
+//     }
+// }
+
+function Square(props) {
+    return (
+      <button className="square" onClick={props.onClick}>
+        {props.value}
+      </button>
+    );
+  }
 class Board extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            squares: Array(9).fill(null),
+            xIsNext: true
+        };
+    }
+    handleClick(i) {
+        const squares = this.state.squares.slice();
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        this.setState({
+            squares: squares,
+            xIsNext: !this.state.xIsNext,
+        });
+    }
+
+    renderSquare(i) {
+        return (
+            <Square
+                value={this.state.squares[i]}
+                onClick={() => this.handleClick(i)}
+            />
+        );
+    }
     render() {
-        const status = "Next Player is : X";
+        const status = "Next Player is : " + (this.state.xIsNext ? 'X' : 'O');
         return (
             <div>
                 <div className="status">{status}</div>
                 <div className="board-row">
-                    <Square value={0} />
-                    <Square value={1} />
-                    <Square value={2} />
+                    <Square value={this.renderSquare(0)} />
+                    <Square value={this.renderSquare(1)} />
+                    <Square value={this.renderSquare(2)} />
                 </div>
                 <div className="board-row">
-                    <Square value={3} />
-                    <Square value={4} />
-                    <Square value={5} />
+                    <Square value={this.renderSquare(3)} />
+                    <Square value={this.renderSquare(4)} />
+                    <Square value={this.renderSquare(5)} />
                 </div>
                 <div className="board-row">
-                    <Square value={6} />
-                    <Square value={7} />
-                    <Square value={8} />
+                    <Square value={this.renderSquare(6)} />
+                    <Square value={this.renderSquare(7)} />
+                    <Square value={this.renderSquare(8)} />
                 </div>
             </div>
         );
@@ -53,7 +85,7 @@ class Game extends React.Component {
                 <div className="game-board">
                     <Board />
                 </div>
-                <div clas sName="game-info">
+                <div className="game-info">
                     <div>{/* status */}</div>
                     <ol>{/* TODO */}</ol>
                 </div>
